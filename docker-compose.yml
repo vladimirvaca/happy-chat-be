@@ -1,0 +1,13 @@
+
+services:
+  db:
+    image: postgres:15-alpine3.20
+    restart: always
+    environment:
+      - POSTGRES_DB=happy-chat-db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes:
+      - ../happy-chat-db:/var/lib/postgresql/data

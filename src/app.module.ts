@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WebsocketGateway } from './websocket/websocket.gateway';
+import { WebsocketGateway } from './modules/websocket/websocket.gateway';
+import { DatabaseModule } from './modules/database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule],
   controllers: [AppController],
   providers: [AppService, WebsocketGateway],
 })
