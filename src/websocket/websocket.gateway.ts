@@ -8,6 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway()
 export class WebsocketGateway
@@ -23,10 +24,10 @@ export class WebsocketGateway
   }
 
   handleConnection(client: Socket) {
-    console.log('Client connected => ', client.id);
+    Logger.log(`Client connected => ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Client disconnected => ', client.id);
+    Logger.log(`Client disconnected => ${client.id}`);
   }
 }
