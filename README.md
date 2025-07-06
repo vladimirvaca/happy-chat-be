@@ -5,19 +5,33 @@ It allows users **create accounts, login, create chat rooms, and send messages**
 
 For this we use the following technologies:
 - **NestJS**
+- **Bcrypt**
 - **Socket.IO** for real-time communication
 - **PostgreSQL** as the database
+- **TestContainers** for tests purposes
+- **Docker Compose** for running services
 
 ## Project setup
 
 ```bash
- npm install
+npm install
 ```
 
 ## Run the project
 
 ```bash
- npm run start:dev
+npm run start:dev
+```
+
+## Test
+Unit testing:
+
+```bash
+npm run test
+```
+e2e end testing:
+```bash
+npm run test:e2e
 ```
 
 ## Swagger
