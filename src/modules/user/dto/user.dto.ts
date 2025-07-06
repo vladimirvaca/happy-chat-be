@@ -1,28 +1,27 @@
-import {
-  IsNotEmpty,
-  MinLength,
-  IsEmail,
-  IsEnum,
-  validate,
-} from 'class-validator';
+import { IsNotEmpty, MinLength, IsEmail, IsEnum } from 'class-validator';
 import { Role, User } from '../model/user.model';
-import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
+  @ApiProperty({ example: 'Tony' })
   @IsNotEmpty()
   readonly name: string;
 
+  @ApiProperty({ example: 'Stark' })
   @IsNotEmpty()
   readonly lastName: string;
 
+  @ApiProperty({ example: 'tonystark91@gmail.com' })
   @IsNotEmpty()
   @IsEmail()
   readonly email: string;
 
+  @ApiProperty({ example: 'secretpassword' })
   @IsNotEmpty()
   @MinLength(6)
   readonly password: string;
 
+  @ApiProperty({ example: Role.USER, enum: Role })
   @IsNotEmpty()
   @IsEnum(Role, {
     message: 'Role must be either ADMIN or USER',
@@ -35,13 +34,5 @@ export class UserDto {
 
   static fromEntity(user: User): UserDto {
     return new UserDto(user);
-  }
-
-  async isValid(): Promise<boolean> {
-    const errors = await validate(this);
-    if (errors.length > 0) {
-      throw new BadRequestException(errors);
-    }
-    return true;
   }
 }
