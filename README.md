@@ -17,14 +17,14 @@ For this we use the following technologies:
 ## Run the project
 
 ```bash
- # development
-npm run start
-
- # watch mode
-npm run start:dev
-
- # production mode
-npm run start:prod
+ npm run start:dev
 ```
+
+## Swagger
+
+There exist some routes configured and exposed to create an account, login (generate a JWT token).
+They can be accessed and tested in swagger.
+
+Once the project is running you can access in: [http://localhost:3000/api-docs](http://localhost:3000/api-docs/)
 
 > **Developed with ❤️ by vladimirvaca 👽**
