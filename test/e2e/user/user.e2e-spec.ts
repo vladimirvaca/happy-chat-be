@@ -7,6 +7,7 @@ import { UserModule } from '../../../src/modules/user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '../../../src/modules/database/database.module';
 import { App } from 'supertest/types';
+import { PostgresTestContainer } from '../../utils/PostgresTestContainer';
 
 interface ValidationError {
   statusCode: 400;
@@ -26,8 +27,11 @@ const expectValidationError = (
 
 describe('UserController (e2e)', () => {
   let app: INestApplication<App>;
+  const postgresContainer = new PostgresTestContainer();
 
-  beforeEach(async () => {
+  beforeAll(async () => {
+    await postgresContainer.start();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         await ConfigModule.forRoot({
@@ -53,6 +57,7 @@ describe('UserController (e2e)', () => {
   });
 
   afterAll(async () => {
+    await postgresContainer.stop();
     await app.close();
   });
 
@@ -144,7 +149,7 @@ describe('UserController (e2e)', () => {
     });
 
     it('should fail when trying to create user with existing email', async () => {
-      // First create a user
+      // Create a user
       await request(app.getHttpServer())
         .post('/api/v1/user/create')
         .send(validUserDto);
