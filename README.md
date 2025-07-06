@@ -3,7 +3,7 @@
 This is a project that uses the NestJS framework and WebSockets to create a chat application. 
 It allows users **create accounts, login, create chat rooms, and send messages** to each other in real-time.
 
-For this we use the following technologies:
+For this I use the following technologies:
 - **NestJS**
 - **Bcrypt**
 - **Socket.IO** for real-time communication
@@ -29,7 +29,7 @@ Unit testing:
 ```bash
 npm run test
 ```
-e2e end testing:
+e2e testing:
 ```bash
 npm run test:e2e
 ```
