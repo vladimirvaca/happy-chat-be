@@ -11,32 +11,32 @@ export class User extends Model {
     type: DataType.STRING,
     allowNull: false
   })
-  name: string;
+  declare name: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  lastName: string;
+  declare lastName: string;
 
   @Column({
     type: DataType.STRING,
     unique: true,
     allowNull: false
   })
-  email: string;
+  declare email: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  password: string;
+  declare password: string;
 
   @Column({
     type: DataType.ENUM,
     values: ['ADMIN', 'USER'],
-    defaultValue: 'USER',
+    defaultValue: Role.USER,
     allowNull: false
   })
-  role: Role;
+  declare role: Role;
 }
