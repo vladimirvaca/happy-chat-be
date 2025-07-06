@@ -24,7 +24,7 @@ export class UserDto {
   @ApiProperty({ example: Role.USER, enum: Role })
   @IsNotEmpty()
   @IsEnum(Role, {
-    message: 'Role must be either ADMIN or USER',
+    message: 'Role must be either ADMIN or USER'
   })
   readonly role: Role = Role.USER;
 

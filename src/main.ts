@@ -12,8 +12,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      whitelist: true,
-    }),
+      whitelist: true
+    })
   );
 
   // swagger configuration
@@ -29,9 +29,9 @@ async function bootstrap() {
         bearerFormat: 'JWT',
         name: 'JWT',
         description: 'Enter JWT token',
-        in: 'header',
+        in: 'header'
       },
-      'access-token',
+      'access-token'
     )
     .build();
 

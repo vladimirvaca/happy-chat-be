@@ -10,9 +10,9 @@ import { UserModule } from './modules/user/user.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
-    UserModule,
+    UserModule
   ],
   controllers: [AppController],
-  providers: [AppService, WebsocketGateway],
+  providers: [AppService, WebsocketGateway]
 })
 export class AppModule {}
