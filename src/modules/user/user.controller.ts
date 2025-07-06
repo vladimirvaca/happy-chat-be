@@ -9,6 +9,7 @@ import {
 import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Response } from '../../types/Response';
 
 @Controller('user')
 export class UserController {
@@ -24,14 +25,14 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Create a new user' })
   @Post('create')
-  async create(@Body() userDto: UserDto): Promise<any> {
+  async create(@Body() userDto: UserDto): Promise<Response> {
     try {
-      Logger.log('Creating user');
+      Logger.log(`Creating user:  ${userDto.email}`);
       await this.userService.create(userDto);
 
       return {
         statusCode: HttpStatus.CREATED,
-        message: 'User created succesfully'
+        message: 'User created successfully.'
       };
     } catch (e) {
       Logger.error('Error creating user: ', e);
