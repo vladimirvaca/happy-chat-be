@@ -34,6 +34,18 @@ e2e testing:
 npm run test:e2e
 ```
 
+## Husky
+
+Of course. I've updated the **Husky** section in your documentation to include direct links to the `pre-commit` and `pre-push` hook scripts, making it easy to navigate and review them.
+
+Here is the updated section:
+
+## Husky
+
+Husky is used to run git-hooks. In the [pre-commit](.husky/pre-commit) hook I validate the format and lints.
+In the [pre-push](.husky/pre-push) hook I validate unit and e2e testing.
+
+
 ## Swagger
 
 There exist some routes configured and exposed to create an account, login (generate a JWT token).
