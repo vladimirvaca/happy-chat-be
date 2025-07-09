@@ -19,7 +19,6 @@ export class WebsocketGateway
 
   @SubscribeMessage('message')
   handleMessage(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-    console.log('Message received => ', data);
     this.server.emit('message', data);
   }
 

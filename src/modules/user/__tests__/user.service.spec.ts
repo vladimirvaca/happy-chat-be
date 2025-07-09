@@ -13,6 +13,7 @@ describe('UserService', () => {
   let userService: UserService;
   let configServiceGetOrThrowMock: jest.Mock;
   let createUserMock: jest.Mock;
+  let findOneUserMock: jest.Mock;
 
   const mockUser = {
     id: 1,
@@ -35,6 +36,7 @@ describe('UserService', () => {
 
   beforeEach(async () => {
     createUserMock = jest.fn().mockResolvedValue(mockUser);
+    findOneUserMock = jest.fn();
     configServiceGetOrThrowMock = jest.fn().mockReturnValue('12');
 
     const module: TestingModule = await Test.createTestingModule({
@@ -43,7 +45,8 @@ describe('UserService', () => {
         {
           provide: getModelToken(User),
           useValue: {
-            create: createUserMock
+            create: createUserMock,
+            findOne: findOneUserMock
           }
         },
         {
@@ -126,6 +129,34 @@ describe('UserService', () => {
       await expect(userService.hashPassword(password)).rejects.toThrow(
         BadRequestException
       );
+    });
+  });
+
+  describe('Find user by email', () => {
+    it('should return a user DTO when a user is found', async () => {
+      const email = 'test@example.com';
+      findOneUserMock.mockResolvedValue(mockUser);
+
+      const result = await userService.findOneByEmail(email);
+
+      expect(result).toEqual(UserDto.fromEntity(mockUser));
+      expect(findOneUserMock).toHaveBeenCalledWith({
+        where: { email },
+        raw: true
+      });
+    });
+
+    it('should return null when no user is found', async () => {
+      const email = 'notfound@example.com';
+      findOneUserMock.mockResolvedValue(null);
+
+      const result = await userService.findOneByEmail(email);
+
+      expect(result).toBeNull();
+      expect(findOneUserMock).toHaveBeenCalledWith({
+        where: { email },
+        raw: true
+      });
     });
   });
 });

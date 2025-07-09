@@ -1,0 +1,50 @@
+import { AuthService } from './auth.service';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Post,
+  UnauthorizedException
+} from '@nestjs/common';
+import { LoginDto } from './dto/login.dto';
+import { UserService } from '../user/user.service';
+
+@ApiTags('auth')
+@Controller('auth')
+export class AuthController {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService
+  ) {}
+
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Jwt token generated successfully.'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Unauthorized. Bad credentials.'
+  })
+  @Post('login')
+  async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
+    const existingUser = await this.userService.findOneByEmail(loginDto.email);
+
+    if (!existingUser) {
+      throw new UnauthorizedException();
+    } else {
+      const isPasswordMatching = await this.authService.isPasswordMatching(
+        loginDto.password,
+        existingUser.password
+      );
+
+      if (isPasswordMatching) {
+        return {
+          accessToken: this.authService.generateJwtToken(loginDto.email)
+        };
+      } else {
+        throw new UnauthorizedException();
+      }
+    }
+  }
+}

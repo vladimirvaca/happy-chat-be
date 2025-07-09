@@ -25,6 +25,14 @@ const expectValidationError = (
   ).toContain(expectedMessage);
 };
 
+const validUserDto: UserDto = {
+  email: 'test@example.com',
+  password: 'password123',
+  name: 'Test',
+  lastName: 'User',
+  role: Role.USER
+};
+
 describe('UserController (e2e)', () => {
   let app: INestApplication<App>;
   const postgresContainer = new PostgresTestContainer();
@@ -62,14 +70,6 @@ describe('UserController (e2e)', () => {
   });
 
   describe('/api/v1/user/create (POST)', () => {
-    const validUserDto: UserDto = {
-      email: 'test@example.com',
-      password: 'password123',
-      name: 'Test',
-      lastName: 'User',
-      role: Role.USER
-    };
-
     it('should create a new user successfully', () => {
       return request(app.getHttpServer())
         .post('/api/v1/user/create')

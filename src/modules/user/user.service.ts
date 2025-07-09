@@ -42,4 +42,13 @@ export class UserService {
       );
     }
   }
+
+  async findOneByEmail(email: string): Promise<UserDto | null> {
+    const user = await this.userRepository.findOne<User>({
+      where: { email },
+      raw: true
+    });
+
+    return user ? UserDto.fromEntity(user) : null;
+  }
 }
