@@ -1,5 +1,5 @@
 import { AuthService } from './auth.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -10,7 +10,6 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { UserService } from '../user/user.service';
 
-@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -26,6 +25,7 @@ export class AuthController {
     status: HttpStatus.FORBIDDEN,
     description: 'Unauthorized. Bad credentials.'
   })
+  @ApiOperation({ summary: 'Generate a Jwt token for a user.' })
   @Post('login')
   async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
     const existingUser = await this.userService.findOneByEmail(loginDto.email);

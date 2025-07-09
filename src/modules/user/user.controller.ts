@@ -23,7 +23,7 @@ export class UserController {
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad request.'
   })
-  @ApiOperation({ summary: 'Create a new user' })
+  @ApiOperation({ summary: 'Create a new user.' })
   @Post('create')
   async create(@Body() userDto: UserDto): Promise<Response> {
     try {
