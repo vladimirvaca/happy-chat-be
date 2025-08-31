@@ -31,7 +31,7 @@ export class AuthController {
     const existingUser = await this.userService.findOneByEmail(loginDto.email);
 
     if (!existingUser) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('User does not exist.');
     } else {
       const isPasswordMatching = await this.authService.isPasswordMatching(
         loginDto.password,
@@ -43,7 +43,7 @@ export class AuthController {
           accessToken: this.authService.generateJwtToken(loginDto.email)
         };
       } else {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Password is incorrect.');
       }
     }
   }
