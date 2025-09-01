@@ -1,7 +1,6 @@
-
 services:
   db:
-    image: postgres:15-alpine3.20
+    image: ghcr.io/dbsystel/postgresql-partman:17
     restart: always
     environment:
       - POSTGRES_DB=happy-chat-db
@@ -10,4 +9,8 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ../happy-chat-db:/var/lib/postgresql/data
+      - happy-chat-db-data:/var/lib/postgresql/data
+      - ./init-pg-partman.sql:/docker-entrypoint-initdb.d/init-pg-partman.sql
+
+volumes:
+  happy-chat-db-data:
