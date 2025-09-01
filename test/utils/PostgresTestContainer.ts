@@ -7,7 +7,9 @@ export class PostgresTestContainer {
   private container: StartedPostgreSqlContainer;
 
   async start(): Promise<StartedPostgreSqlContainer> {
-    this.container = await new PostgreSqlContainer('postgres:15-alpine3.20')
+    this.container = await new PostgreSqlContainer(
+      'ghcr.io/dbsystel/postgresql-partman:17'
+    )
       .withUsername('testUser')
       .withPassword('testPassword')
       .withDatabase('testDb')
