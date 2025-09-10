@@ -1,0 +1,2 @@
+export const CLOSE_APP_TIMEOUT = 10000;
+export const WAIT_FOR_APP_TIMEOUT = 20000;

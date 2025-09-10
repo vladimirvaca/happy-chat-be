@@ -9,6 +9,7 @@ import { UserModule } from '../../../src/modules/user/user.module';
 import { PostgresTestContainer } from '../../utils/PostgresTestContainer';
 import { Role } from '../../../src/modules/user/model/user.model';
 import { LoginDto } from '../../../src/modules/auth/dto/login.dto';
+import { CLOSE_APP_TIMEOUT, WAIT_FOR_APP_TIMEOUT } from '../constants';
 
 interface ValidationError {
   statusCode: number;
@@ -74,7 +75,7 @@ describe('AuthController (e2e)', () => {
   afterAll(async () => {
     await postgresContainer.stop();
     await app.close();
-  });
+  }, CLOSE_APP_TIMEOUT);
 
   describe('/api/v1/auth/login (POST)', () => {
     // Create the user before running login tests
@@ -83,39 +84,51 @@ describe('AuthController (e2e)', () => {
         .post('/api/v1/user/create')
         .send(testUser)
         .expect(201);
-    });
+    }, WAIT_FOR_APP_TIMEOUT);
 
-    it('should login successfully and return an access token', () => {
-      return request(app.getHttpServer())
-        .post('/api/v1/auth/login')
-        .send(loginDto)
-        .expect(201)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('accessToken');
-        });
-    });
+    it(
+      'should login successfully and return an access token',
+      () => {
+        return request(app.getHttpServer())
+          .post('/api/v1/auth/login')
+          .send(loginDto)
+          .expect(201)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('accessToken');
+          });
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
-    it('should fail when user does not exist', () => {
-      const nonExistentUser: LoginDto = {
-        email: 'nouser@example.com',
-        password: 'password123'
-      };
-      return request(app.getHttpServer())
-        .post('/api/v1/auth/login')
-        .send(nonExistentUser)
-        .expect(401);
-    });
+    it(
+      'should fail when user does not exist',
+      () => {
+        const nonExistentUser: LoginDto = {
+          email: 'nouser@example.com',
+          password: 'password123'
+        };
+        return request(app.getHttpServer())
+          .post('/api/v1/auth/login')
+          .send(nonExistentUser)
+          .expect(401);
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
-    it('should fail with incorrect password', () => {
-      const wrongPasswordDto: LoginDto = {
-        ...loginDto,
-        password: 'wrong-password'
-      };
-      return request(app.getHttpServer())
-        .post('/api/v1/auth/login')
-        .send(wrongPasswordDto)
-        .expect(401);
-    });
+    it(
+      'should fail with incorrect password',
+      () => {
+        const wrongPasswordDto: LoginDto = {
+          ...loginDto,
+          password: 'wrong-password'
+        };
+        return request(app.getHttpServer())
+          .post('/api/v1/auth/login')
+          .send(wrongPasswordDto)
+          .expect(401);
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
     it('should fail with missing email (validation)', () => {
       return request(app.getHttpServer())
@@ -127,14 +140,18 @@ describe('AuthController (e2e)', () => {
         );
     });
 
-    it('should fail with missing password (validation)', () => {
-      return request(app.getHttpServer())
-        .post('/api/v1/auth/login')
-        .send({})
-        .expect(400)
-        .expect((res) =>
-          expectValidationError(res, 'password should not be empty')
-        );
-    });
+    it(
+      'should fail with missing password (validation)',
+      () => {
+        return request(app.getHttpServer())
+          .post('/api/v1/auth/login')
+          .send({})
+          .expect(400)
+          .expect((res) =>
+            expectValidationError(res, 'password should not be empty')
+          );
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
   });
 });

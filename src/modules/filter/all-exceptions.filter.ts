@@ -182,7 +182,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
   private hasValidationMessage(exception: unknown): boolean {
     return (
       this.hasMessage(exception) &&
-      typeof exception.message === 'string' &&
       exception.message.toLowerCase().includes('validation')
     );
   }

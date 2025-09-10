@@ -10,6 +10,7 @@ import { App } from 'supertest/types';
 import { PostgresTestContainer } from '../../utils/PostgresTestContainer';
 import { AllExceptionsFilter } from '../../../src/modules/filter/all-exceptions.filter';
 import { getModelToken } from '@nestjs/sequelize';
+import { CLOSE_APP_TIMEOUT, WAIT_FOR_APP_TIMEOUT } from '../constants';
 
 interface ValidationError {
   statusCode: 400;
@@ -82,121 +83,145 @@ describe('UserController (e2e)', () => {
   afterAll(async () => {
     await postgresContainer.stop();
     await app.close();
-  });
+  }, CLOSE_APP_TIMEOUT);
 
   describe('/api/v1/user/create (POST)', () => {
-    it('should create a new user successfully', () => {
-      return request(app.getHttpServer())
-        .post('/api/v1/user/create')
-        .send(validUserDto)
-        .expect(201)
-        .expect((response) => {
-          expect(response.body).toEqual({
-            statusCode: 201,
-            message: 'User created successfully.'
+    it(
+      'should create a new user successfully',
+      () => {
+        return request(app.getHttpServer())
+          .post('/api/v1/user/create')
+          .send(validUserDto)
+          .expect(201)
+          .expect((response) => {
+            expect(response.body).toEqual({
+              statusCode: 201,
+              message: 'User created successfully.'
+            });
           });
-        });
-    });
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
-    it('should fail when email is missing', () => {
-      const invalidUserDto = {
-        password: validUserDto.password,
-        name: validUserDto.name,
-        lastName: validUserDto.lastName,
-        role: validUserDto.role
-      };
+    it(
+      'should fail when email is missing',
+      () => {
+        const invalidUserDto = {
+          password: validUserDto.password,
+          name: validUserDto.name,
+          lastName: validUserDto.lastName,
+          role: validUserDto.role
+        };
 
-      return request(app.getHttpServer())
-        .post('/api/v1/user/create')
-        .send(invalidUserDto)
-        .expect(400)
-        .expect((response) => {
-          expect(response.body).toEqual({
-            statusCode: 400,
-            message: 'Validation error',
-            errors: ['email must be an email', 'email should not be empty']
+        return request(app.getHttpServer())
+          .post('/api/v1/user/create')
+          .send(invalidUserDto)
+          .expect(400)
+          .expect((response) => {
+            expect(response.body).toEqual({
+              statusCode: 400,
+              message: 'Validation error',
+              errors: ['email must be an email', 'email should not be empty']
+            });
           });
-        });
-    });
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
-    it('should fail when password is too short', () => {
-      const invalidUserDto = {
-        ...validUserDto,
-        password: '12345' // Less than 6 characters
-      };
+    it(
+      'should fail when password is too short',
+      () => {
+        const invalidUserDto = {
+          ...validUserDto,
+          password: '12345' // Less than 6 characters
+        };
 
-      return request(app.getHttpServer())
-        .post('/api/v1/user/create')
-        .send(invalidUserDto)
-        .expect(400)
-        .expect((response) => {
-          expect(response.body).toEqual({
-            statusCode: 400,
-            message: 'Validation error',
-            errors: ['password must be longer than or equal to 6 characters']
+        return request(app.getHttpServer())
+          .post('/api/v1/user/create')
+          .send(invalidUserDto)
+          .expect(400)
+          .expect((response) => {
+            expect(response.body).toEqual({
+              statusCode: 400,
+              message: 'Validation error',
+              errors: ['password must be longer than or equal to 6 characters']
+            });
           });
-        });
-    });
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
-    it('should fail when email is invalid', () => {
-      const invalidUserDto = {
-        ...validUserDto,
-        email: 'invalid-email'
-      };
+    it(
+      'should fail when email is invalid',
+      () => {
+        const invalidUserDto = {
+          ...validUserDto,
+          email: 'invalid-email'
+        };
 
-      return request(app.getHttpServer())
-        .post('/api/v1/user/create')
-        .send(invalidUserDto)
-        .expect(400)
-        .expect((response) => {
-          expect(response.body).toEqual({
-            statusCode: 400,
-            message: 'Validation error',
-            errors: ['email must be an email']
+        return request(app.getHttpServer())
+          .post('/api/v1/user/create')
+          .send(invalidUserDto)
+          .expect(400)
+          .expect((response) => {
+            expect(response.body).toEqual({
+              statusCode: 400,
+              message: 'Validation error',
+              errors: ['email must be an email']
+            });
           });
-        });
-    });
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
-    it('should fail when role is invalid', () => {
-      const invalidUserDto = {
-        ...validUserDto,
-        role: 'INVALID_ROLE'
-      };
+    it(
+      'should fail when role is invalid',
+      () => {
+        const invalidUserDto = {
+          ...validUserDto,
+          role: 'INVALID_ROLE'
+        };
 
-      return request(app.getHttpServer())
-        .post('/api/v1/user/create')
-        .send(invalidUserDto)
-        .expect(400)
-        .expect((response) => {
-          expect(response.body).toEqual({
-            statusCode: 400,
-            message: 'Validation error',
-            errors: ['Role must be either ADMIN or USER']
+        return request(app.getHttpServer())
+          .post('/api/v1/user/create')
+          .send(invalidUserDto)
+          .expect(400)
+          .expect((response) => {
+            expect(response.body).toEqual({
+              statusCode: 400,
+              message: 'Validation error',
+              errors: ['Role must be either ADMIN or USER']
+            });
           });
-        });
-    });
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
 
-    it('should fail when trying to create user with existing email', async () => {
-      // Create a user
-      await request(app.getHttpServer())
-        .post('/api/v1/user/create')
-        .send(validUserDto)
-        .expect(201)
-        .expect((response) => {
-          expect(response.body).toEqual({
-            statusCode: 201,
-            message: 'User created successfully.'
+    it(
+      'should fail when trying to create user with existing email',
+      async () => {
+        // Create a user
+        await request(app.getHttpServer())
+          .post('/api/v1/user/create')
+          .send(validUserDto)
+          .expect(201)
+          .expect((response) => {
+            expect(response.body).toEqual({
+              statusCode: 201,
+              message: 'User created successfully.'
+            });
           });
-        });
 
-      // Try to create another user with the same email
-      return request(app.getHttpServer())
-        .post('/api/v1/user/create')
-        .send(validUserDto)
-        .expect(400)
-        .expect((response: request.Response) =>
-          expectValidationError(response, 'Validation error')
-        );
-    });
+        // Try to create another user with the same email
+        return request(app.getHttpServer())
+          .post('/api/v1/user/create')
+          .send(validUserDto)
+          .expect(400)
+          .expect((response: request.Response) =>
+            expectValidationError(response, 'Validation error')
+          );
+      },
+      WAIT_FOR_APP_TIMEOUT
+    );
   });
 });
