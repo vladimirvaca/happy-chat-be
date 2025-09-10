@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../../src/app.module';
 import { PostgresTestContainer } from '../utils/PostgresTestContainer';
+import { WAIT_FOR_APP_TIMEOUT } from './constants';
 
 describe('AppController (e2e)', () => {
   const postgresContainer = new PostgresTestContainer();
@@ -20,7 +21,7 @@ describe('AppController (e2e)', () => {
     // Global prefix
     app.setGlobalPrefix('api/v1');
     await app.init();
-  });
+  }, WAIT_FOR_APP_TIMEOUT);
 
   afterAll(async () => {
     await app.close();

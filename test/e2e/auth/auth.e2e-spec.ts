@@ -9,7 +9,11 @@ import { UserModule } from '../../../src/modules/user/user.module';
 import { PostgresTestContainer } from '../../utils/PostgresTestContainer';
 import { Role } from '../../../src/modules/user/model/user.model';
 import { LoginDto } from '../../../src/modules/auth/dto/login.dto';
-import { CLOSE_APP_TIMEOUT, WAIT_FOR_APP_TIMEOUT } from '../constants';
+import {
+  CLOSE_APP_TIMEOUT,
+  WAIT_FOR_APP_TIMEOUT,
+  WAIT_FOR_APP_TO_LOAD_TIMEOUT
+} from '../constants';
 
 interface ValidationError {
   statusCode: number;
@@ -70,7 +74,7 @@ describe('AuthController (e2e)', () => {
     );
 
     await app.init();
-  });
+  }, WAIT_FOR_APP_TO_LOAD_TIMEOUT);
 
   afterAll(async () => {
     await postgresContainer.stop();

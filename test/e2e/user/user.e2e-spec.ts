@@ -69,7 +69,7 @@ describe('UserController (e2e)', () => {
     userModel = moduleFixture.get(getModelToken(User));
 
     await app.init();
-  });
+  }, WAIT_FOR_APP_TIMEOUT);
 
   afterEach(async () => {
     await userModel.destroy({
