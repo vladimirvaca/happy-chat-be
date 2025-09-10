@@ -21,6 +21,13 @@ export class Channel extends Model {
   })
   declare description: string | null;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  })
+  declare isPrivate: boolean;
+
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,

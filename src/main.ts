@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AllExceptionsFilter } from './modules/filter/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,12 +18,16 @@ async function bootstrap() {
   // global prefix
   app.setGlobalPrefix('api/v1');
 
+  // Add global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       whitelist: true
     })
   );
+
+  // Add global exception filter
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // swagger configuration
   const swaggerConfig = new DocumentBuilder()
@@ -49,6 +54,10 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 
-bootstrap().then(() => {
-  Logger.log('** Server is running **');
-});
+bootstrap()
+  .then(() => {
+    Logger.log('** Server is running **');
+  })
+  .catch((error) => {
+    Logger.error('** Error starting server ** :', error);
+  });
